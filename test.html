@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+<script src=./annyang.js></script>
+<script src=./jquery-3.4.1.min.js></script>
+
+<script type="text/javascript">
+ window.onload = function() {
+	var mic = document.getElementById("img");
+	
+	mic.onclick=function(){
+			annyang.start({ autoRestart: false, continuous: true})
+        var recognition = annyang.getSpeechRecognizer();
+        var final_transcript = '';
+        recognition.interimResult = true;
+        recognition.onresult = function(event)
+        {
+		  var pasttime=new Date().getSeconds();
+		  	
+            var interim_transcript = '';
+            final_transcript ='';
+            for (var i = event.resultIndex; i< event.results.length; ++i)
+            {
+                if (event.results[i].isFinal)
+                {
+                    final_transcript += event.results[i][0].transcript;
+                    console.log("final_transcript="+final_transcript);
+                }
+                else
+                {
+                    interim_transcript += event.results[i][0].transcript;
+                    console.log("interim_transcript="+interim_transcript);
+                }
+				
+				if(interim_transcript=='퍼즈'){
+					annyang.pause();
+				}
+				
+				
+            }
+            //document.getElementById('result').innerHTML = interim_transcript+final_transcript;
+			document.getElementById('result').value = interim_transcript+final_transcript;
+            console.log('interim='+interim_transcript+'|final='+final_transcript);
+			//location.replace("https://www.google.co.kr/search?q="+document.getElementById('result').value);
+			location.href="https://www.google.co.kr/search?q="+document.getElementById('result').value
+		};
+		//mic.onclick=null;
+		
+	}
+	
+ }; 
+ 
+function button1_click() {
+			location.href="https://www.google.co.kr/search?q="+document.getElementById('result').value
+}
+ </script>
+
+</head>
+<body>
+<div class="container" id="grid" style="margin: 50px 100px 1000px 100px">
+        
+		<h3>   
+            음성 인식 테스트
+        </h3>
+		<form>
+			<input type="text"  id="result" style="width:200;height:30px;font-size:30px;">
+			<img id="img"  src="./mic.png"  height="40" width="40"></img>
+		</form>
+		<button id="button1" onclick="button1_click();">검색</button>
+        
+		<br>
+		
+        <!--<font size="8" id="result">
+            마이크에 음성을 입력 하세요.
+        </font>-->
+        
+        
+    </div>
+
+</body>
+</html>
